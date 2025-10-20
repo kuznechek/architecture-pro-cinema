@@ -1,17 +1,10 @@
 ﻿using Confluent.Kafka;
-using EventsService.Models;
 using System.Text.Json;
+using EventsService.Data;
 
 namespace EventsService.Services;
 
-public interface IEventProducerService
-{
-    Task ProduceUserEventAsync(UserEvent userEvent);
-    Task ProducePaymentEventAsync(PaymentEvent paymentEvent);
-    Task ProduceMovieEventAsync(MovieEvent movieEvent);
-}
-
-public class EventsProducerService : IEventProducerService
+public class EventsProducerService
 {
     private readonly IProducer<Null, string> _producer;
     private readonly ILogger<EventsProducerService> _logger;
@@ -46,27 +39,24 @@ public class EventsProducerService : IEventProducerService
         await ProduceEventAsync("movie-events", movieEvent);
     }
 
-    private async Task ProduceEventAsync<T>(string topic, T eventData) where T : BaseEvent
+    private async Task ProduceEventAsync<T>(string topic, T eventData) where T : Event
     {
         try
         {
-            eventData.EventType = typeof(T).Name;
             var message = JsonSerializer.Serialize(eventData);
-
             var result = await _producer.ProduceAsync(topic, new Message<Null, string> { Value = message });
 
-            _logger.LogInformation("Event sent to {Topic}: {Message}", topic, message);
+            _logger.LogInformation("Event sent to {1}: {2}", topic, message);
         }
         catch (ProduceException<Null, string> ex)
         {
-            _logger.LogError(ex, "Failed to deliver message to {Topic}: {Error}", topic, ex.Error.Reason);
+            _logger.LogError(ex, "Failed to process message to {1}: {2}", topic, ex.Error.Reason);
             throw;
         }
     }
 
     public void Dispose()
     {
-        _producer?.Flush(TimeSpan.FromSeconds(5));
         _producer?.Dispose();
     }
 }

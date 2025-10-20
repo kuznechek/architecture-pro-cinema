@@ -26,16 +26,20 @@ def proxy_get(request: Request, microservice: str):
     if microservice in Services:
         migration_toggle = Services[microservice]["migration"]
         route = Services[microservice]["route"]
-        port = "8080" if migration_toggle==false else Services[microservice]["port"]
+        
+        port = "8080" if migration_toggle == False else Services[microservice]["port"]
 
         url = f"http://127.0.0.1:{port}/{route}"        
         return RedirectResponse(url=url)
 
 @app.post("/api/{microservice}")
 def proxy_get(request: Request, microservice: str):
-    if microservice in Services:        
+    if microservice in Services:
+        migration_toggle = Services[microservice]["migration"]
         port = Services[microservice]["port"]
         route = Services[microservice]["route"]
+
+        port = "8080" if migration_toggle == False else Services[microservice]["port"]
 
         url = f"http://127.0.0.1:{port}/{route}"        
         return RedirectResponse(url=url)

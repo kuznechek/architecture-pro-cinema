@@ -2,7 +2,7 @@ using EventsService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IEventProducerService, EventsProducerService>();
+builder.Services.AddSingleton<EventsProducerService>();
 builder.Services.AddHostedService<EventConsumerService>();
 
 builder.Services.AddControllers();

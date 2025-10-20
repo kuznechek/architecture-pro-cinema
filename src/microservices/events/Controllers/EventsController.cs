@@ -1,19 +1,20 @@
-﻿using EventsService.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using EventsService.Services;
-using Microsoft.AspNetCore.Mvc;
+using EventsService.Data;
 
 namespace EventsService.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/events")]
 public class EventsController : ControllerBase
 {
-    private readonly IEventProducerService _eventProducer;
     private readonly ILogger<EventsController> _logger;
+    
+    private readonly EventsProducerService _eventProducerService;
 
-    public EventsController(IEventProducerService eventProducer, ILogger<EventsController> logger)
+    public EventsController(EventsProducerService eventProducerService, ILogger<EventsController> logger)
     {
-        _eventProducer = eventProducer;
+        _eventProducerService = eventProducerService;
         _logger = logger;
     }
 
@@ -22,38 +23,16 @@ public class EventsController : ControllerBase
     {
         var userEvent = new UserEvent
         {
-            UserId = request.UserId,
+            Id = request.Id,
             Action = request.Action,
             Email = request.Email
         };
 
-        await _eventProducer.ProduceUserEventAsync(userEvent);
+        await _eventProducerService.ProduceUserEventAsync(userEvent);
 
         return Created("/", new
         {
             EventId = userEvent.EventId,
-            Message = "User event created successfully",
-            Status = "success"
-        });
-    }
-
-    [HttpPost("payment")]
-    public async Task<IActionResult> CreatePaymentEvent([FromBody] PaymentEventRequest request)
-    {
-        var paymentEvent = new PaymentEvent
-        {
-            PaymentId = request.PaymentId,
-            Amount = request.Amount,
-            Currency = request.Currency,
-            Status = request.Status
-        };
-
-        await _eventProducer.ProducePaymentEventAsync(paymentEvent);
-
-        return Created("/", new
-        {
-            EventId = paymentEvent.EventId,
-            Message = "Payment event created successfully",
             Status = "success"
         });
     }
@@ -63,43 +42,36 @@ public class EventsController : ControllerBase
     {
         var movieEvent = new MovieEvent
         {
-            MovieId = request.MovieId,
+            Id = request.Id,
             Title = request.Title,
-            Action = request.Action,
-            Rating = request.Rating
+            Action = request.Action
         };
 
-        await _eventProducer.ProduceMovieEventAsync(movieEvent);
+        await _eventProducerService.ProduceMovieEventAsync(movieEvent);
 
         return Created("/", new
         {
             EventId = movieEvent.EventId,
-            Message = "Movie event created successfully",
             Status = "success"
         });
     }
-}
 
-// DTO классы для запросов
-public class UserEventRequest
-{
-    public int UserId { get; set; }
-    public string Action { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-}
+    [HttpPost("payment")]
+    public async Task<IActionResult> CreatePaymentEvent([FromBody] PaymentEventRequest request)
+    {
+        var paymentEvent = new PaymentEvent
+        {
+            Id = request.Id,
+            Amount = request.Amount,
+            Status = request.Status
+        };
 
-public class PaymentEventRequest
-{
-    public int PaymentId { get; set; }
-    public decimal Amount { get; set; }
-    public string Currency { get; set; } = "USD";
-    public string Status { get; set; } = string.Empty;
-}
+        await _eventProducerService.ProducePaymentEventAsync(paymentEvent);
 
-public class MovieEventRequest
-{
-    public int MovieId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Action { get; set; } = string.Empty;
-    public double? Rating { get; set; }
+        return Created("/", new
+        {
+            EventId = paymentEvent.EventId,
+            Status = "success"
+        });
+    }
 }

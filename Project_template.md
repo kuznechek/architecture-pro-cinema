@@ -2,11 +2,14 @@
 
 ## Задание 1
 
-1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
+Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
 Результат представьте в виде контейнерной диаграммы в нотации С4.
-Добавьте ссылку на файл в этот шаблон
-[ссылка на файл](ссылка)
 
+**Диаграмма контейнеров (Containers)**
+
+![Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/containers.png)
+
+[Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/containers.puml)
 
 ## Задание 2
 
@@ -56,8 +59,16 @@
     - Добавьте в docker-compose новый сервис, kafka там уже есть
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
-Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
 
+**Тесты**
+
+![Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_2_tests.png)
+
+**Состояния топиков Kafka**
+
+![Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_2_topics.png)
+
+http://localhost:8090
 
 ## Задание 3
 

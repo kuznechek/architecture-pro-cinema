@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
-using EventsService.Models;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using EventsService.Data;
 
 namespace EventsService.Services;
 
@@ -16,13 +16,13 @@ public class EventConsumerService : BackgroundService
 
         var consumerConfig = new ConsumerConfig
         {
-            BootstrapServers = configuration["KAFKA_BROKERS"] ?? "kafka:9092",
+            BootstrapServers = "kafka:9092",
             GroupId = "cinemaabyss-events-group",
             AutoOffsetReset = AutoOffsetReset.Earliest,
             EnableAutoCommit = true,
             EnableAutoOffsetStore = false
         };
-        _logger.LogInformation(configuration["KAFKA_BROKERS"] ?? "kafka:9092");
+        
         _consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
     }
 
@@ -46,18 +46,9 @@ public class EventConsumerService : BackgroundService
 
                 _consumer.StoreOffset(consumeResult);
             }
-            catch (ConsumeException ex)
-            {
-                _logger.LogError(ex, "Error consuming message: {Error}", ex.Error.Reason);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Consumer operation was cancelled");
-                break;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error occurred while consuming messages");
+                _logger.LogError(ex, "Error consuming message.");
             }
         }
 
@@ -72,20 +63,20 @@ public class EventConsumerService : BackgroundService
             {
                 case "user-events":
                     var userEvent = JsonSerializer.Deserialize<UserEvent>(message);
-                    _logger.LogInformation("UserEvent processed: UserId={UserId}, Action={Action}, Email={Email}",
-                        userEvent?.UserId, userEvent?.Action, userEvent?.Email);
+                    _logger.LogInformation("UserEvent processed: UserId={Id}, Action={Action}, Email={Email}",
+                        userEvent.Id, userEvent.Action, userEvent.Email);
                     break;
 
                 case "payment-events":
                     var paymentEvent = JsonSerializer.Deserialize<PaymentEvent>(message);
-                    _logger.LogInformation("PaymentEvent processed: PaymentId={PaymentId}, Amount={Amount}, Status={Status}",
-                        paymentEvent?.PaymentId, paymentEvent?.Amount, paymentEvent?.Status);
+                    _logger.LogInformation("PaymentEvent processed: PaymentId={Id}, Amount={Amount}, Status={Status}",
+                        paymentEvent.Id, paymentEvent.Amount, paymentEvent.Status);
                     break;
 
                 case "movie-events":
                     var movieEvent = JsonSerializer.Deserialize<MovieEvent>(message);
-                    _logger.LogInformation("MovieEvent processed: MovieId={MovieId}, Title={Title}, Action={Action}, Rating={Rating}",
-                        movieEvent?.MovieId, movieEvent?.Title, movieEvent?.Action, movieEvent?.Rating);
+                    _logger.LogInformation("MovieEvent processed: MovieId={Id}, Title={Title}, Action={Action}",
+                        movieEvent.Id, movieEvent.Title, movieEvent.Action);
                     break;
             }
             _logger.LogInformation("Process");
@@ -93,7 +84,7 @@ public class EventConsumerService : BackgroundService
         }
         catch (JsonException ex)
         {
-            _logger.LogError(ex, "Failed to deserialize message from topic {Topic}: {Message}", topic, message);
+            _logger.LogError(ex, "Failed to deserialize message {1}: {2}", topic, message);
         }
     }
 
