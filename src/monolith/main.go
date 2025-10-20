@@ -86,7 +86,7 @@ func initDB() {
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]bool{"status": true})
+	json.NewEncoder(w).Encode(map[string]string{"monolith status": "ok"})
 }
 
 // User handlers
@@ -160,6 +160,8 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 
 // Movie handlers
 func handleMovies(w http.ResponseWriter, r *http.Request) {
+	log.Println("here")
+	fmt.Println("here")
 	switch r.Method {
 	case "GET":
 		if r.URL.Query().Get("id") != "" {
