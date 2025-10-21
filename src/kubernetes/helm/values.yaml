@@ -126,7 +126,7 @@ kafka:
       memory: 512Mi
   persistence:
     enabled: true
-    size: 5Gi
+    size: 50Gi
     accessMode: ReadWriteOnce
   topics:
     - name: movie-events

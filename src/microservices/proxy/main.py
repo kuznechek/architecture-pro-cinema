@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 import httpx
 import uvicorn
 import requests
@@ -25,21 +25,26 @@ async def value_error_exception_handler(request: Request, exc: ValueError):
 def proxy_get(request: Request, microservice: str):
     if microservice in Services:
         migration_toggle = Services[microservice]["migration"]
+        host = Services[microservice]["host"]
         route = Services[microservice]["route"]
         
         port = "8080" if migration_toggle == False else Services[microservice]["port"]
+        url = f"http://{host}:{port}/{route}"
 
-        url = f"http://127.0.0.1:{port}/{route}"        
-        return RedirectResponse(url=url)
-
+        result = requests.get(url = url)
+        
+        return result.json()
+ 
 @app.post("/api/{microservice}")
 def proxy_get(request: Request, microservice: str):
     if microservice in Services:
         migration_toggle = Services[microservice]["migration"]
-        port = Services[microservice]["port"]
+        host = Services[microservice]["host"]
         route = Services[microservice]["route"]
-
+        
         port = "8080" if migration_toggle == False else Services[microservice]["port"]
+        url = f"http://{host}:{port}/{route}"
 
-        url = f"http://127.0.0.1:{port}/{route}"        
-        return RedirectResponse(url=url)
+        result = requests.get(url = url)
+        
+        return result.json()

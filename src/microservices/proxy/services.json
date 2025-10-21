@@ -1,7 +1,7 @@
 {
     "movies": {
         "route": "api/movies",
-        "host": "movies",
+        "host": "movies-service",
         "port": "8081",
         "migration": true
     },

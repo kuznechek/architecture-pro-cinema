@@ -3,7 +3,7 @@ name: Docker Build and Push
 on:
   workflow_dispatch:
   push:
-    branches: [ cinema ]
+    branches: [ main, cinema ]
     paths:
       - 'src/**'
       - '.github/workflows/docker-build-push.yml'
@@ -82,7 +82,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Extract metadata (tags, labels) for Events Service
+      - name: Extract metadata (tags, labels) for EventService
         id: meta-events
         uses: docker/metadata-action@v4
         with:
@@ -93,8 +93,7 @@ jobs:
             type=sha,format=short
             type=ref,event=branch
             latest
-
-      - name: Build and push Events Service Docker image
+      - name: Build and push EventService Docker image
         uses: docker/build-push-action@v4
         with:
           context: ./src/microservices/events
@@ -104,7 +103,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Extract metadata (tags, labels) for Proxy Service
+      - name: Extract metadata (tags, labels) for Proxy
         id: meta-proxy
         uses: docker/metadata-action@v4
         with:
@@ -115,7 +114,6 @@ jobs:
             type=sha,format=short
             type=ref,event=branch
             latest
-
       - name: Build and push Proxy Service Docker image
         uses: docker/build-push-action@v4
         with:
@@ -134,13 +132,13 @@ jobs:
           echo "Starting services with docker compose"
           docker compose up -d --build
           echo "Waiting for services to become healthy"
-          for i in {1..200}; do
+          for i in {1..60}; do
             if curl -sSf http://localhost:8000/health >/dev/null 2>&1 && curl -sSf http://localhost:8082/api/events/health >/dev/null 2>&1; then
               echo "Services healthy"
               break
             fi
             echo "Waiting... ($i)"
-            sleep 1
+            sleep 2
           done
           echo "Running Postman tests"
           cd tests/postman
@@ -150,4 +148,3 @@ jobs:
         if: always()
         run: |
           docker compose down -v
-      
