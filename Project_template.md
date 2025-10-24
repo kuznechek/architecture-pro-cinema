@@ -285,7 +285,7 @@ cat .docker/config.json | base64
 
 **Result screenshot**
 
-![Result](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_3_result.png)
+![Result 3](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_3_result.png)
 
 **Logs**
 
@@ -365,6 +365,13 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+**Helm**
+
+![Helm](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_4_helm.png)
+
+**Result**
+
+![Result 4](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_4_result.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
