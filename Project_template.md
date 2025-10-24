@@ -426,7 +426,7 @@ Code 503 : 399 (79.8 %)
 Можно еще проверить статистику
 
 ```bash
-kubectl exec -n cinemaabyss fortio-deploy-b6757cbbb-7c9qg -c istio-proxy -- pilot-agent request GET stats | grep movies-service | grep pending
+kubectl exec -n cinemaabyss fortio-deploy-5c948d95cf-zpmfl -c istio-proxy -- pilot-agent request GET stats | grep movies-service | grep pending
 ```
 
 И там смотрим 
@@ -437,6 +437,11 @@ You can see 21 for the upstream_rq_pending_overflow value which means 21 calls s
 ```
 
 Приложите скриншот работы circuit breaker'а
+
+![1](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p1.png)
+![2](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p2.png)
+![3](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p3.png)
+![4](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p4.png)
 
 Удаляем все
 ```bash
