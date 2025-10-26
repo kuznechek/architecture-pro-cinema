@@ -1,0 +1,56 @@
+@startuml
+title Kinobezdna Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "A user of Kinobezdna system")
+Person(admin, "Administrator", "An administrator of Kinobezdna system")
+
+System(System, "Kinobezdna System", "Online cinema")
+
+Container_Boundary(System, "System") {
+  Container(web, "Web App", "web", "Handles user interactions")
+  Container(api, "API Gateway", "Proxy Server", "Manages traffic switching")
+
+  Container(Monolith, "Monolith App", "Old logic")
+  Container(UsersService, "Users Service", "Manages users")
+  Container(MoviesService, "Movies Service", "Manages movies")
+  Container(PaymentsService, "Payments Service", "Manages payments")
+  Container(SubscriptionsService, "Subscriptions Service", "Manages subscriptions")
+
+  Container(MessageBroker, "MessageBroker", "Kafka")
+
+  ContainerDb(OldDb, "Old Database", "PostgreSQL", "Stores all data")
+  ContainerDb(UsersDb, "Users Database", "PostgreSQL", "Stores users' data")
+  ContainerDb(MoviesDb, "Movies Database", "PostgreSQL", "Stores movies' data")
+  ContainerDb(PaymentDb, "Payments Database", "PostgreSQL", "Stores payments' data")
+  ContainerDb(SubscriptionsDb, "Subscriptions Database", "PostgreSQL", "Stores subscriptions' data")
+}
+
+Rel(user, web, "")
+Rel(admin, web, "")
+
+BiRel(web,api,"Rest API")
+
+BiRel(api,Monolith,"Rest API")
+Rel(Monolith,OldDb,"SQL query")
+
+BiRel(api,UsersService,"Rest API")
+Rel(UsersService,UsersDb,"SQL query")
+BiRel(UsersService,MessageBroker,"Message")
+
+BiRel(api,MoviesService,"Rest API")
+Rel(MoviesService,MoviesDb,"SQL query")
+BiRel(MoviesService,MessageBroker,"Message")
+
+BiRel(api,PaymentsService,"Rest API")
+Rel(PaymentsService,PaymentDb,"SQL query")
+BiRel(PaymentsService,MessageBroker,"Message")
+
+BiRel(api,SubscriptionsService,"Rest API")
+Rel(SubscriptionsService,SubscriptionsDb,"SQL query")
+BiRel(SubscriptionsService,MessageBroker,"Message")
+
+@enduml

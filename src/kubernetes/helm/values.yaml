@@ -5,7 +5,7 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: ewoJImF1dGhzIjoKCXsKCQkiZ2hjci5pbyI6CgkJewoJCQkJImF1dGgiOiAiYTNWNmJtVmphR1ZyT21kcGRHaDFZbDl3WVhSZk1URkJUMWRPUWtOUk1EaEJOMjFrVTBKdGJtcDNUVjlzYWpoV2NYaElRbms0U2xadWNHcG5aMmM1VDFobWVVMHlSbG95WTIxMlNGTlJZVVpsVWt4NFEwNXpOMGRSTmtKRVNFVXhVMDFWVm1Sdk9BPT0iCgoJCX0KCX0sCgoJImNyZWRzU3RvcmUiOiAiZGVza3RvcCIsCgkiY3VycmVudENvbnRleHQiOiAiZGVza3RvcC1saW51eCIKfQ==
 # Database configuration
 database:
   host: postgres
@@ -33,7 +33,7 @@ database:
 monolith:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/monolith
+    repository: ghcr.io/kuznechek/architecture-pro-cinema/monolith
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -53,7 +53,7 @@ monolith:
 proxyService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/proxy-service
+    repository: ghcr.io/kuznechek/architecture-pro-cinema/proxy-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -73,7 +73,7 @@ proxyService:
 moviesService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/movies-service
+    repository: ghcr.io/kuznechek/architecture-pro-cinema/movies-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -93,7 +93,7 @@ moviesService:
 eventsService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/events-service
+    repository: ghcr.io/dkuznechek/architecture-pro-cinema/events-service
     tag: latest
     pullPolicy: Always
   replicas: 1

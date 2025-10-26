@@ -1,0 +1,26 @@
+{
+    "movies": {
+        "route": "api/movies",
+        "host": "movies-service",
+        "port": "8081",
+        "migration": true
+    },
+    "users": {
+        "route": "api/users",
+        "host": "monolith",
+        "port": "8080",
+        "migration": false
+    },
+    "payments": {
+        "route": "api/payments",
+        "host": "monolith",
+        "port": "8080",
+        "migration": false
+    },
+    "subscriptions": {
+        "route": "api/subscriptions",
+        "host": "monolith",
+        "port": "8080",
+        "migration": false
+    }
+}

@@ -154,3 +154,8 @@ go.work
 
 # Postman tests reports
 tests/postman/reports/
+
+tests/postman/reports/
+
+# python event test service
+/src/microservices/events_

@@ -2,17 +2,19 @@
 
 ## Задание 1
 
-1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
+Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
 Результат представьте в виде контейнерной диаграммы в нотации С4.
-Добавьте ссылку на файл в этот шаблон
-[ссылка на файл](ссылка)
 
+**Диаграмма контейнеров (Containers)**
+
+![Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/containers.png)
+
+[Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/containers.puml)
 
 ## Задание 2
 
 ### 1. Proxy
 Команда КиноБездны уже выделила сервис метаданных о фильмах movies и вам необходимо реализовать бесшовный переход с применением паттерна Strangler Fig в части реализации прокси-сервиса (API Gateway), с помощью которого можно будет постепенно переключать траффик, используя фиче-флаг.
-
 
 Реализуйте сервис на любом языке программирования в ./src/microservices/proxy.
 Конфигурация для запуска сервиса через docker-compose уже добавлена
@@ -57,8 +59,16 @@
     - Добавьте в docker-compose новый сервис, kafka там уже есть
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
-Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
 
+**Тесты**
+
+![Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_2_tests.png)
+
+**Состояния топиков Kafka**
+
+![Kinobezdna Containers Diagram](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_2_topics.png)
+
+http://localhost:8090
 
 ## Задание 3
 
@@ -110,13 +120,12 @@ jobs:
 Как только сборка отработает и в github registry появятся ваши образы, можно переходить к блоку настройки Kubernetes
 Успешным результатом данного шага является "зеленая" сборка и "зеленые" тесты
 
-
 ### Proxy в Kubernetes
 
 #### Шаг 1
 Для деплоя в kubernetes необходимо залогиниться в docker registry Github'а.
 1. Создайте Personal Access Token (PAT) https://github.com/settings/tokens . Создавайте class с правом read:packages
-2. В src/kubernetes/*.yaml (event-service, monolith, movies-service и proxy-service)  отредактируйте путь до ваших образов 
+2. В src/kubernetes/*.yaml (event-service, monolith, movies-service и proxy-service) отредактируйте путь до ваших образов 
 ```bash
  spec:
       containers:
@@ -274,6 +283,13 @@ cat .docker/config.json | base64
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
+**Result screenshot**
+
+![Result 3](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_3_result.png)
+
+**Logs**
+
+![Logs](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_3_logs.png)
 
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -349,6 +365,13 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+**Helm**
+
+![Helm](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_4_helm.png)
+
+**Result**
+
+![Result 4](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_4_result.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
@@ -403,7 +426,7 @@ Code 503 : 399 (79.8 %)
 Можно еще проверить статистику
 
 ```bash
-kubectl exec -n cinemaabyss fortio-deploy-b6757cbbb-7c9qg -c istio-proxy -- pilot-agent request GET stats | grep movies-service | grep pending
+kubectl exec -n cinemaabyss fortio-deploy-5c948d95cf-zpmfl -c istio-proxy -- pilot-agent request GET stats | grep movies-service | grep pending
 ```
 
 И там смотрим 
@@ -414,6 +437,11 @@ You can see 21 for the upstream_rq_pending_overflow value which means 21 calls s
 ```
 
 Приложите скриншот работы circuit breaker'а
+
+![1](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p1.png)
+![2](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p2.png)
+![3](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p3.png)
+![4](https://github.com/kuznechek/architecture-pro-cinema/blob/cinema/src/docs/task_5_circuit_p4.png)
 
 Удаляем все
 ```bash
